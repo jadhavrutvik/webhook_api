@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            border: "1px solid back";
+
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Admin Inteface</h1>
+    </center>
+    <section>
+    <form style="margin-left: 300px;" method="post"  action="{% url 'reply_to_user' %}">
+        {% csrf_token %}
+
+        <table id="" style="margin-top: 100px;" class="table">
+            <thead>
+              <tr>
+                <th scope="col">Mobile Number</th>
+                <th style="margin-left:200px;" scope="col">Select</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for mobile in mobile_list %}
+              <tr>
+                <td>{{mobile.mobile_no}}</td>
+
+                <td><input type="checkbox" name="mobile" value="{{mobile.mobile_no}}"></td>
+
+
+              </tr>
+              {% endfor %}
+              
+
+            </tbody>
+          </table>
+          <label>Message:</label>
+          <br>
+              <textarea  name="msg" required></textarea>
+              <br>
+              <button type="submit">Send Message</button>
+    </div>
+</form>
+
+
+
+</section>
+
+<section style="margin-left: 300px;">
+
+    <h1 >View Message</h1>
+    <table style="border: 1px solid black;" class="table">
+        <thead>
+          <tr>
+            <th style="border: 1px solid black;" scope="col">Sender</th>
+            <th style="border: 1px solid black;" scope="col">Receiver</th>
+            <th style="border: 1px solid black;" scope="col">content</th>
+            <th style="border: 1px solid black;" scope="col">Timestamp</th>
+            <th style="border: 1px solid black;" scope="col">Status</th>
+
+          </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+          <tr>
+           <td style="border: 1px solid black;">{{ message.sender }}</td>
+            <td style="border: 1px solid black;">{{ message.receiver }}</td>
+            <td style="border: 1px solid black;">{{ message.content }}</td>
+            <td style="border: 1px solid black;">{{ message.timestamp }}</td>
+            <td style="border: 1px solid black;">{{ message.status }}</td>
+    
+          </tr>
+         {% endfor %}
+        </tbody>
+      </table>
+</section>
+
+
+
+
+
+    
+    
+
+</body>
+</html>
