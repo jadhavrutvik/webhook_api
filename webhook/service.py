@@ -4,6 +4,10 @@ import asyncio
 from webhook.models import Message
 import logging
 import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
 
 
 # Configure logging to log to a file and console
@@ -32,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 class WhatsapSevice():
     BASE_URL="https://graph.facebook.com/v14.0/551602171364742/messages"
-    ACCESS_TOKEN="EAAPp0EdFjMYBO3KeqWp37Jw4swtzHcZAfMRWXjtOOlbDUm6JNX6rc7ONKFcxu7wcrldDjMXEej2y7bL0BLJUxtGYwgO0e5vZAXy5hA3ZCFhB3f6pFJM8Ek7Ejz5PmOfTcoLRTOTZCuWTxBDzxj4co5Ep1rGOEwghtyAOlGKak1XUsiwmp9qFT6ZBumpHrPeJAah3DX70kRaggrv31pZBQ78kvsWiUZD"
+    ACCESS_TOKEN=os.environ["ACCESS_TOKEN"]
     def __init__(self):
         self.headers={
             "Authorization":f"Bearer {self.ACCESS_TOKEN}",

@@ -67,6 +67,7 @@ async def webhook(request):
     elif request.method=="POST":
         try:
             data=json.loads(request.body.decode("utf-8"))
+            print(data)
 
 
             for entry in data.get('entry', []):
@@ -104,7 +105,7 @@ async def webhook(request):
                                         )
             
                         
-            return JsonResponse({"status":"sucess","message":"Received message"})
+            return JsonResponse({"status":"sucess","message":"Received message"},status=200)
         except Exception as e:
             logger.exception(F"received error:{str(e)}")
             return JsonResponse({"status":"sucess","message":str(e)})
