@@ -56,7 +56,7 @@ class WhatsapSevice():
                                         timestamp=timestamp,
                                         status="Sent",
                                             )
-                logging.info(f"received mobiel no {mobile_no} and message {message}")
+                logger.info(f"received mobiel no {mobile_no} and message {message}")
                 if respone.status_code==200:
     
                     return True,respone.json()

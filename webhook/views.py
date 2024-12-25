@@ -52,15 +52,15 @@ async def webhook(request):
         try:
 
             if VERIFY_TOKEN==verify_token:
-                logging.info(f"User verified successfully")
+                logger.info(f"User verified successfully")
                 return HttpResponse(challenge)
 
             else:
-                logging.error(f"Faild to verification")
+                logger.error(f"Faild to verification")
 
                 return HttpResponse("verification faild",status=403)
         except Exception as e:
-            logging.exception(f"Failded to verification at {str(e)}")
+            logger.exception(f"Failded to verification at {str(e)}")
 
             return JsonResponse({"status":"error","message":str(e)})
         
@@ -78,7 +78,7 @@ async def webhook(request):
                         timestamp = msg.get('timestamp')  # Message timestamp (UNIX)
 
                         dt_object = datetime.utcfromtimestamp(int(timestamp))  # Convert to datetime
-                        logging.info(f"got data with this mobile no {sender} at {dt_object}")
+                        logger.info(f"got data with this mobile no {sender} at {dt_object}")
                         exists=await asyncio.to_thread(
                                     Message.objects.filter(mobile_no=sender).exists
                                 )
