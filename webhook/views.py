@@ -3,6 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse,HttpResponse
 import json
 from datetime import datetime
+import logging
+import os
 import asyncio
 from django.shortcuts import render,redirect
 from rest_framework.response import Response
@@ -10,6 +12,34 @@ from webhook.models import Message
 from webhook.service import WhatsapSevice
 from rest_framework.decorators import api_view
 # Create your views here.
+
+# Configure logging to log to a file and console
+logger = logging.getLogger(__name__)
+ 
+log_directory = 'logs'
+if not os.path.exists(log_directory):
+    os.makedirs(log_directory)
+
+file_handler = logging.FileHandler(f'{log_directory}/app.log')
+console_handler = logging.StreamHandler()
+ 
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+console_handler.setFormatter(formatter)
+ 
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+ 
+logger.setLevel(logging.DEBUG)
+# This is the token you set up in your Meta Developer Console
+VERIFY_TOKEN = "get_verify"  # Replace with your actual token
+
+# Enable logging to inspect incoming requests
+logger = logging.getLogger(__name__)
+
+
+
+
 
 
 VERIFY_TOKEN="get_verify"
@@ -22,15 +52,22 @@ async def webhook(request):
         try:
 
             if VERIFY_TOKEN==verify_token:
+                logging.info(f"User verified successfully")
                 return HttpResponse(challenge)
+
             else:
+                logging.error(f"Faild to verification")
+
                 return HttpResponse("verification faild",status=403)
         except Exception as e:
+            logging.exception(f"Failded to verification at {str(e)}")
+
             return JsonResponse({"status":"error","message":str(e)})
         
     elif request.method=="POST":
         try:
             data=json.loads(request.body.decode("utf-8"))
+
 
             for entry in data.get('entry', []):
                 for change in entry.get('changes', []):
@@ -41,7 +78,7 @@ async def webhook(request):
                         timestamp = msg.get('timestamp')  # Message timestamp (UNIX)
 
                         dt_object = datetime.utcfromtimestamp(int(timestamp))  # Convert to datetime
-                        
+                        logging.info(f"got data with this mobile no {sender} at {dt_object}")
                         exists=await asyncio.to_thread(
                                     Message.objects.filter(mobile_no=sender).exists
                                 )
@@ -69,6 +106,7 @@ async def webhook(request):
                         
             return JsonResponse({"status":"sucess","message":"Received message"})
         except Exception as e:
+            logger.exception(F"received error:{str(e)}")
             return JsonResponse({"status":"sucess","message":str(e)})
                         
 
@@ -79,13 +117,12 @@ async def reply_to_user(request):
 
     if not mobile_list or not message:
         return Response({"status":"error","message":"Mobile no and message are required"},status=400)
-    
+    logger.info(f"received send data with mobile list {mobile_list} and message {message}")
     whatsapp_service=WhatsapSevice()
     try:
         task=[]
         for mobile in mobile_list:
             mobile=mobile.strip()
-
             task.append(whatsapp_service.send_message(mobile,message))
 
         result=await asyncio.gather(*task)
@@ -94,9 +131,11 @@ async def reply_to_user(request):
             success,data=result
 
             if not success:
+                logger.error(f"faield to send msg ")
                 return JsonResponse({"status":"error","mobile no":mobile_no,"message":data})
         return redirect("/")
     except Exception as e:
+        logger.exception(f"faield to send message{str(e)}")
         return JsonResponse({"status":"error","message":str(e)})
 
 @api_view(["GET"])
