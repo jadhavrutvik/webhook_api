@@ -35,3 +35,8 @@
 2024-12-25 18:16:24,000 - webhook.views - INFO - received send data with mobile list ['918265057464', '9193220 15008'] and message Hello Friend
 2024-12-25 18:16:25,146 - webhook.service - INFO - received mobiel no 9193220 15008 and message Hello Friend
 2024-12-25 18:16:25,175 - webhook.service - INFO - received mobiel no 918265057464 and message Hello Friend
+2024-12-25 18:17:52,892 - webhook.views - ERROR - Faild to verification
+2024-12-25 18:17:52,898 - webhook.views - INFO - got data with this mobile no 918265057464 at 2024-12-25 12:32:12
+2024-12-25 18:17:52,942 - webhook.views - INFO - received send data with mobile list ['918265057464', '9193220 15008'] and message Hello Friend
+2024-12-25 18:17:54,027 - webhook.service - INFO - received mobiel no 9193220 15008 and message Hello Friend
+2024-12-25 18:17:54,116 - webhook.service - INFO - received mobiel no 918265057464 and message Hello Friend
